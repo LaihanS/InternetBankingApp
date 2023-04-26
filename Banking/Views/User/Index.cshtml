@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+@using Banking.Core.Application.ViewModels.UserVMS;
+@model LoginViewModel;
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4>Login </h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+                        @Html.ValidationSummary(false, "", new{@class = "text-danger" })
+                        @if (Model.HasError)
+                        { 
+                            <div class="alert alert-danger alert-dimissible fade show" role="alert">
+                                <p>@Model.ErrorDetails</p>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
+
+                        }
+                        <form enctype="multipart/form-data" method="post" asp-controller="User" asp-action="Index">
+
+                            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
+
+                            <div class="form-floating">
+                                <input class="form-control"
+                                       asp-for="Email"
+                                       id="floatingInput"
+                                       placeholder="User" />
+                                <label for="floatingInput">User</label>
+                            </div>
+
+                            <div class="form-floating">
+                                <input class="form-control"
+                                       asp-for="Password"
+                                       id="floatingPassword"
+                                       placeholder="Password" />
+                                <label for="floatingPassword">Password</label>
+                            </div>
+
+                            <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
+                            @*  <a href="/reset" class="w-100 btn btn-lg btn-success margin-top-2">Reset</a>*@
+                            <p>¿No recuerda su contraseña? <a asp-controller="User" asp-action="ForgotPassword">Cambiar</a> </p>
+
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

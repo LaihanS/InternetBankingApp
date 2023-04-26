@@ -1,0 +1,147 @@
+﻿@{
+    ViewData["Title"] = "Crear Prueba De Lab";
+}
+
+@using Banking.Core.Application.Enums;
+@using Banking.Core.Application.ViewModels.UserVMS;
+@model SaveUserViewModel;
+
+@{
+    bool EditMode = Model.Id == null ? false : true;
+
+    bool IsAdmin = EditMode && Model.Roles.Any(r => r.Equals(EnumRoles.Admin.ToString())) ? true : false;
+
+    bool IsNotAdmin = EditMode && Model.Roles.Any(r => r.Equals(EnumRoles.Basic.ToString())) ? true : false;
+}
+
+@section Scripts{
+  <script>
+
+  //window.addEventListener('load', function() {
+    const checkbox = document.getElementById('IsAdminist');
+    const container = document.getElementById('ContainerData');
+    const montoInicialInput = document.getElementById('montoInicial');
+
+    if (!checkbox.checked) {
+        container.innerHTML = "<label for='Monto' class='form-label'> Introducir monto inicial de la cuenta: </label>" +
+            "<input type='number' class='form-control' id='Monto' oninput='updateMontoInicial(this.value)'>";
+    }
+
+    checkbox.addEventListener('change', function () {
+        if (!checkbox.checked) {
+            container.innerHTML = "<label for='Monto' class='form-label'> Introducir monto inicial de la cuenta: </label>" +
+                "<input type='number' class='form-control' id='Monto' oninput='updateMontoInicial(this.value)'>";
+              
+        } else {
+            container.innerHTML = '';
+            montoInicialInput.value = '';
+        }
+    });
+
+    function updateMontoInicial(value) {
+        montoInicialInput.value = value;
+    }
+  //});
+
+
+  </script>
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4> @(EditMode ? "Editar" : "Registrar") usuario</h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+                        @Html.ValidationSummary(false, "", new{@class = "text-danger" })
+                        @if (Model.HasError)
+                        {
+                            <div class="alert alert-danger alert-dimissible fade show" role="alert">
+                                <p>@Model.ErrorDetails</p>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
+
+                        }
+                        <form id="Formulario" enctype="multipart/form-data" method="post" asp-controller="UserMantainment" asp-action="@(EditMode?"Edit":"Register")">
+
+                            <div class="mb-3">
+                                <label for="NameText" class="form-label">Nombre</label>
+                                <input asp-for="FirstName" class="form-control" id="NameText">
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="ApellidoText" class="form-label">Apellido</label>
+                                <input asp-for="LastName" class="form-control" id="ApellidoText">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="usernameText" class="form-label">UserName: </label>
+                                <input asp-for="UserName" class="form-control" id="usernameText">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="Correo" class="form-label">Correo</label>
+                                <input asp-for="Email" class="form-control" id="Correo">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="Cedula" class="form-label">Cedula</label>
+                                <input asp-for="Cedula" class="form-control" id="Cedula">
+                            </div>
+
+
+                            <div class="mb-3">
+                                <label for="Contraseña" class="form-label">Contraseña</label>
+                                <input asp-for="Password" class="form-control" id="Contraseña">
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="ConfirmContraseña" class="form-label">Confirmar Contraseña</label>
+                                <input asp-for="ConfirmPassword" class="form-control" id="ConfirmContraseña">
+                            </div>
+
+
+                            @if (IsNotAdmin || !EditMode)
+                            {
+                                <div class="mb-3">
+                                    <input asp-for="IsAdmin" class="form-check-input" type="checkbox" value="@true" id="IsAdminist">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        Es Administrador:
+                                    </label>
+                                </div>
+
+                            }
+
+                            @if (IsAdmin)
+                            {
+                                <p>
+                                </p>
+                            }else if (IsNotAdmin || !EditMode)
+                            {
+                                <div class="mb-3" id="ContainerData">
+                                </div>
+
+                            }
+
+                            
+
+                            <input type="hidden" id="montoInicial" asp-for="Monto" name="Monto" value="">
+
+                            <input type="hidden" asp-for="Id">
+
+                            <button type="submit" class="btn btn-primary">Dale</button>
+                            <a asp-controller="UserMantainment" asp-action="Mantain" class="btn btn-warning">Atrás</a>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

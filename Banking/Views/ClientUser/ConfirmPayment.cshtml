@@ -1,0 +1,29 @@
+﻿@model Banking.Core.Application.ViewModels.Pago.SavePagoViewModel
+@{
+    ViewData["Title"] = "Eliminar Producto";
+}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header bg-dark text-light">
+                <h4>Esta seguro que desea transferir al usuario @Model.Cuenta.Usuario.FirstName @Model.Cuenta.Usuario.LastName?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="ClientUser" asp-action="ConfirmPayment">
+
+                    <input type="hidden" asp-for="id" />
+                    <input type="hidden" asp-for="PaymentAmount" />
+                    <input type="hidden" asp-for="PaymentFrom" />
+                    <input type="hidden" asp-for="PaymentFor" />
+                     <input type="hidden" asp-for="userID" />
+                    <input type="hidden" asp-for="ProductID" />
+                    <input type="hidden" asp-for="Cuenta" />
+
+                    <button type="submit" class="btn btn-primary">Confirmar</button>
+                    <a asp-controller="ClientUser" asp-action="Index" class="btn btn-warning">Volver atras</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

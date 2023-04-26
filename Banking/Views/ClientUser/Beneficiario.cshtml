@@ -1,0 +1,76 @@
+﻿@model Banking.Core.Application.ViewModels.UserVMS.UserViewModel;
+@using Banking.Core.Application.Enums;
+@using Banking.Core.Application.ViewModels.Product;
+@using Microsoft.AspNetCore.Http
+@using Banking.Core.Application.Dtos.Account
+@using Banking.Core.Application.Helpers;
+@using Banking.Core.Application.ViewModels.UserVMS;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+
+    bool UserIsValid = Model == null? false: true;
+}
+
+@{
+    ViewData["Title"] = "Usuario";
+}
+
+<div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+        @if (UserIsValid)
+        {
+            <h1 class="fw-light">Cliente @Model.FirstName</h1>
+        }
+       
+        @Html.ValidationSummary(false, "", new{@class = "text-danger" })
+        <form method="post" asp-controller="ClientUser" asp-action="Beneficiario">
+
+            <input required type="search" class="form-control ds-input" id="search-input" placeholder="Buscar Cuenta Beneficiaria..."
+                   aria-label="Search for..." name="accountnumber">
+
+            <button type="submit" class="btn btn-primary">Dale</button>
+        </form>
+    </div>
+</div>
+
+
+
+
+@if (UserIsValid)
+{
+<div class="container-fluid">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+         @if (Model.Beneficiarios == null)
+        {
+          <h1 class="fw-light">De momento no hay beneficiarios</h1>
+        }else
+        {
+
+            @foreach (ProductViewModel item in Model.Beneficiarios)
+            {
+                        <div class="col">
+                            <div class="card shadow-sm">
+                                <div class="card-body">
+                                    <h4>@item.Usuario.FirstName</h4>
+                                    <p>@item.Usuario.LastName</p>
+                                      <p>@item.UnicDigitSequence</p>
+                                <p>@item.ProductAmount</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div class="btn-group">
+                                    <a asp-controller="ClientUser" asp-action="Delete" asp-route-id="@item.id" class="btn btn-sm btn-outline-danger mt-2 mx-2">Borrar</a>
+                                    </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+            }    
+        }
+       
+
+    </div>
+</div>
+}
+
+

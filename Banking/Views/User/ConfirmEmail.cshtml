@@ -1,0 +1,28 @@
+﻿@{
+    ViewData["Title"] = "Confirm";
+}
+
+@using Banking.Core.Application.ViewModels.UserVMS;
+@model string;
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4>Login </h4>
+                </div>
+                <div class="card-body">
+                            <div class="alert alert-primary alert-dimissible fade show" role="alert">
+                            <h2> @Model - <a class="btn-primary" asp-controller="User" asp-action="Index">Login</a></h2>
+                        <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

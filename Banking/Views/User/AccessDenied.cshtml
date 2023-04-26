@@ -1,0 +1,50 @@
+﻿@using Banking.Core.Application.Enums;
+@using Banking.Core.Application.ViewModels.Product;
+@using Microsoft.AspNetCore.Http
+@using Banking.Core.Application.Dtos.Account
+@using Banking.Core.Application.Helpers;
+@using Banking.Core.Application.ViewModels.UserVMS;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+}
+
+@{
+    ViewData["Title"] = "Confirm";
+}
+
+@using Banking.Core.Application.ViewModels.UserVMS;
+
+@model string;
+
+
+
+<div class="container-fluid">
+    <div class="row"> 
+        <div class="col-6 offset-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4>Login </h4>
+                </div>
+                <div class="card-body">
+                            <div class="alert alert-primary alert-dimissible fade show" role="alert">
+                        @if (User.Roles.Any(r => r.Equals(EnumRoles.Basic.ToString())))
+                        {
+
+                        <h2> No tiene permiso para entrar a esta vista - <a class="btn-primary" asp-controller="ClientUser" asp-action="Index">User Index</a></h2>
+                            
+                        }
+                        else if (User.Roles.Any(r => r.Equals(EnumRoles.Admin.ToString())))
+                        {
+                            <h2> No tiene permiso para entrar a esta vista - <a class="btn-primary" asp-controller="UserMantainment" asp-action="Index">Admin Index</a></h2>
+
+                        }
+                        <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
+                       
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>

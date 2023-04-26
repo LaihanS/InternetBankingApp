@@ -1,0 +1,63 @@
+﻿@model Banking.Core.Application.ViewModels.Home.HomeViewModel
+@using Banking.Core.Application.Enums;
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Home</h1>
+        <p>
+            
+        </p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4>Clientes activos e inactivos</h4>
+                    <p>Activos: @Model.ClientesActivos.Count()</p>
+                    <p>Inactivos:  @Model.ClientesInactivos.Count()</p>
+                </div>
+            </div>
+        </div>
+         
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4>Productos Asignados a un Cliente</h4>
+                    <p>Activos: @Model.Productos.Count()</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4>Pagos</h4>
+                    <p>Hoy: @Model.PagosToday.Count()</p>
+                     <p>Siempre: @Model.Pagos.Count()</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h4>Transacciones</h4>
+                    <p>Hoy: @Model.TransaccionesToday.Count()</p>
+                    <p>Siempre: @Model.Transacciones.Count()</p>
+                </div>
+            </div>
+        </div>
+ </div>
+        
+ </div>
+
+
+

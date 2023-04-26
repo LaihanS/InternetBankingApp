@@ -1,0 +1,64 @@
+﻿@model List<Banking.Core.Application.ViewModels.Product.ProductViewModel>
+@using Banking.Core.Application.Enums;
+@using Banking.Core.Application.ViewModels.Product;
+@using Microsoft.AspNetCore.Http
+@using Banking.Core.Application.Dtos.Account
+@using Banking.Core.Application.Helpers;
+@using Banking.Core.Application.ViewModels.UserVMS;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+}
+
+@{
+    ViewData["Title"] = "Usuario";
+}
+
+<div class="row py-lg-5">
+    <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="fw-light">Cliente @User.UserName</h1>
+        <p>
+        </p>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+        @if (Model.Count == 0 || Model == null)
+        {
+            <h2>No hay Usuarios</h2>
+        }
+        else
+        {
+            @foreach (ProductViewModel item in Model)
+            {
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h4>@item.ProductType</h4>
+                            @if (item.ProductType.Equals(ProductTypeEnum.Cuenta_Ahorro.ToString()))
+                            {
+                                <p>@($"Monto de cuenta: {item.ProductAmount}") </p>
+                            }
+                            else if (item.ProductType.Equals(ProductTypeEnum.Préstamo.ToString()))
+                            {
+                                <p>@($"Deuda Préstamo: {item.DebtAmount}") </p>
+                            }
+                            else if (item.ProductType.Equals(ProductTypeEnum.Tarjeta.ToString()))
+                            {
+                                <p>@($"Deuda Tarjeta: {item.DebtAmount}") </p>
+                            }
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h4>@item.UnicDigitSequence</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+
+    </div>
+</div>
+
+

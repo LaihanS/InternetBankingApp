@@ -1,0 +1,88 @@
+﻿@{
+    ViewData["Title"] = "Login";
+}
+
+@using Banking.Core.Application.Enums;
+@using Banking.Core.Application.ViewModels.Product;
+@using Microsoft.AspNetCore.Http
+@using Banking.Core.Application.Dtos.Account
+@using Banking.Core.Application.Helpers;
+@using Banking.Core.Application.ViewModels.UserVMS;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<AuthenticationResponse>("user");
+  
+}
+
+@using Banking.Core.Application.ViewModels.Pago;
+@model SavePagoViewModel;
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4>Realice su pago de tarjeta </h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+                        @Html.ValidationSummary(false, "", new{@class = "text-danger" })
+                        @if (Model.HasError)
+                        {
+                            <div class="alert alert-danger alert-dimissible fade show" role="alert">
+                                <p>@Model.ErrorDetails</p>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dimiss="alert" aria-label="Close"></button>
+
+                        }
+                        <form enctype="multipart/form-data" method="post" asp-controller="ClientUser" asp-action="PagoAvance">
+
+                            <div class="form-floating">
+                                <input class="form-control"
+                                       asp-for="PaymentAmount"
+                                       id="floatingInput"
+                                       placeholder="Monto de la transferencia" />
+                                <label for="floatingInput">Monto: </label>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="Tipo" class="form-label">Seleccionar Tarjeta Para Tomar Prestado</label>
+                                <select asp-for="PaymentFrom" id="Tipo" class="form-select">
+                                    <option>Seleccione...</option>
+                                    @foreach (ProductViewModel item in Model.Products.Where(p => p.ProductType.Equals(ProductTypeEnum.Tarjeta.ToString())))
+                                    {
+                                        <option value="@item.UnicDigitSequence"> @item.ProductType (@item.DebtAmount)</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PaymentFrom" class="text-danger"></span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="Tipo" class="form-label">Seleccionar Cuenta a la Cual va a Transferir:</label>
+                                <select asp-for="PaymentFor" id="Tipo" class="form-select">
+                                    <option>Seleccione...</option>
+                                    @foreach (ProductViewModel item in Model.Products.Where(p => p.ProductType.Equals(ProductTypeEnum.Cuenta_Ahorro.ToString())))
+                                    {
+                                        <option value="@item.UnicDigitSequence"> @item.ProductType (@item.ProductAmount)</option>
+                                    }
+                                </select>
+                                <span asp-validation-for="PaymentFor" class="text-danger"></span>
+                            </div>
+
+
+                             <input type="hidden" asp-for="userID" value="@User.id"/>
+
+                            <button class="w-100 btn btn-lg btn-primary" type="submit">Realizar Avance</button>
+                 
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

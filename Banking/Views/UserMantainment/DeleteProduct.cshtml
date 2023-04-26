@@ -1,0 +1,23 @@
+﻿@model Banking.Core.Application.ViewModels.Product.SaveProductViewModel
+@{
+    ViewData["Title"] = "Activar o inactivar";
+}
+
+<div class="row">
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header bg-dark text-light">
+                <h4>Esta seguro que desea eliminar el producto @Model.ProductType?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="UserMantainment" asp-action="DeleteProduct">
+
+                    <input type="hidden" asp-for="id" />
+
+                    <button type="submit" class="btn btn-primary">Eliminar</button>
+                    <a asp-controller="UserMantainment" asp-action="Mantain" class="btn btn-warning">Volver atras</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

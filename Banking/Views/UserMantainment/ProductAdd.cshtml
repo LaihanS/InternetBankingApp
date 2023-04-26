@@ -1,0 +1,158 @@
+﻿@{
+    ViewData["Title"] = "Crear Prueba De Lab";
+}
+
+@using Banking.Core.Application.Enums
+@using Banking.Core.Application.ViewModels.Product;
+@model SaveProductViewModel;
+
+@section Scripts{
+    <script>
+
+        const tipocontainer = document.getElementById('Tipo');
+        const limitContainer = document.getElementById('LimitTarjeta');
+        const AmountContainer = document.getElementById('Amount');
+        const montoInicialInput = document.getElementById('montoInicial');
+        const DebtInputField = document.getElementById('Debt');
+        let TipoproductInput = document.getElementById('TipoProductValue');
+
+        const tarjeta = document.getElementById('ProductTarjeta');
+        const ahorro = document.getElementById('ProductBankAccount');
+        const prestamo = document.getElementById('ProductPrestamo');
+
+        function UpdateTipo(valuer) {
+            TipoproductInput.value = valuer;
+        }
+
+        function MontoInput(valor) {
+            montoInicialInput.value = valor;
+        }
+
+        function UpdateDebt(valo) {
+            DebtInputField.value = valo;
+        }
+
+        ahorro.addEventListener('change', function () {
+            if (ahorro.checked) {
+                tipocontainer.innerHTML = "<input asp-for='ProductType' class='form-control' Disabled id='ApellidoText' value='Cuenta_Ahorro' oninput=\"UpdateTipo(this.value)\">";
+                AmountContainer.innerHTML = "";
+                limitContainer.innerHTML = "";
+                UpdateTipo("Cuenta_Ahorro");
+            }
+        });
+
+        prestamo.addEventListener('change', function () {
+            if (prestamo.checked) {
+                tipocontainer.innerHTML = "<input asp-for='ProductType' class='form-control' Disabled id='ApellidoText' value='Préstamo' oninput=\"UpdateTipo('Préstamo')\">";
+                AmountContainer.innerHTML = "<label for='PrestamoInput' class='form-label'>Préstamo Amount</label>" + "<input asp-for='DebtAmount' oninput=\"UpdateDebt(this.value)\" class='form-control' id='PrestamoInput'>";
+                limitContainer.innerHTML = "";
+                UpdateTipo("Préstamo");
+            }
+        });
+
+        tarjeta.addEventListener('change', function () {
+            if (tarjeta.checked) {
+                tipocontainer.innerHTML = "<input asp-for='ProductType' class='form-control' Disabled id='ApellidoText' value='Tarjeta' oninput=\"UpdateTipo('Tarjeta')\">";
+                AmountContainer.innerHTML = "<label for='TarjetaInput' class='form-label'>Tarjeta Debt Amount</label>" + "<input asp-for='DebtAmount' oninput=\"UpdateDebt(this.value)\" class='form-control' id='TarjetaInput'>";
+                limitContainer.innerHTML = "<label for='TarjetaInput' class='form-label'>Tarjeta Limit</label>" + "<input asp-for='ProductAmount' oninput=\"MontoInput(this.value)\" class='form-control' id='TarjetaInputLimit'>";
+                UpdateTipo("Tarjeta");
+            }
+        });
+
+
+    </script>
+}
+
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4> Seleccione el tipo de producto que desea crear </h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+                        
+                        <form enctype="multipart/form-data" method="post" asp-controller="UserMantainment" asp-action="ProductAdd">
+
+
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="ProductTarjeta">
+                                <label class="form-check-label" for="ProductTarjeta">
+                                    Tarjeta
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="ProductBankAccount" >
+                                <label class="form-check-label" for="ProductBankAccount">
+                                  Cuenta de Ahorro
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="ProductPrestamo" >
+                                <label class="form-check-label" for="ProductPrestamo">
+                                   Prestamo
+                                </label>
+                            </div>
+
+                            <div class="mb-3" id="Amount">
+                      @*          <label for="ApellidoText" class="form-label">De</label>
+                                <input asp-for="Amount" class="form-control" id="ApellidoText">*@
+                            </div>
+
+                            <div class="mb-3" id="LimitTarjeta">
+                                @*          <label for="ApellidoText" class="form-label">De</label>
+                                <input asp-for="Amount" class="form-control" id="ApellidoText">*@
+                            </div>
+
+
+                            <div class="mb-3" id="Tipo">
+                              @*  <label for="ApellidoText" class="form-label">Tipo</label>
+                                <input asp-for="ProductType" class="form-control" id="ApellidoText" value="Cuenta de ahorro">*@
+                            </div>
+
+                            <input type="hidden" asp-for="UserID">
+
+                            <input type="hidden" id="Debt" asp-for="DebtAmount" name="DebtAmount" value="">
+                            <input type="hidden" id="montoInicial" asp-for="ProductAmount" name="ProductAmount" value="">
+                            <input type="hidden" id="TipoProductValue" asp-for="ProductType" name="ProductType" value="">
+
+                            <button onclick="miFuncion()" type="submit" class="btn btn-primary">Dale</button>
+                            <a asp-controller="UserMantainment" asp-action="Mantain" class="btn btn-warning">Atrás</a>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 offset-3 mt-3">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-light">
+                    <h4> Eliminar producto </h4>
+                </div>
+                <div class="card-body">
+                    <div class="card-body">
+
+                        <ul class="list-group">
+                            @foreach (ProductViewModel product in Model.products)
+                            {
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    @product.ProductType@(product.IsPrincipalAccount?": Cuenta Principal" :": Cuenta Normal")
+                                    <a asp-controller="UserMantainment" asp-action="DeleteProduct" asp-route-id="@product.id" class="btn btn-sm btn-outline-danger mx-2">Borrar</a>
+                                </li>
+                            }
+
+                            </ul>
+                            <input type="hidden" name="accion" value="seleccionar_elemento">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
